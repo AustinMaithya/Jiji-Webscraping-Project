@@ -16,9 +16,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
+
 
 BASE_URL = "https://jiji.co.ke/computer-monitors"
 WEBSITE_URL = "https://jiji.co.ke"
@@ -32,18 +30,10 @@ from pathlib import Path
 
 OUTPUT_FILE = Path("monitors.csv")
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/150.0.0.0 Safari/537.36"
-    )
-}
+HEADERS = { "User-Agent": ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) ""AppleWebKit/537.36 (KHTML, like Gecko) ""Chrome/150.0.0.0 Safari/537.36")}
 
 
-# ============================================================
-# EXTRACT PRODUCT URLS
-# ============================================================
+#EXTRACT PRODUCT URLS
 
 def extract_product_urls():
     """Extract unique monitor product URLs from Jiji listing pages."""
@@ -112,31 +102,17 @@ def extract_product_urls():
     return product_urls
 
 
-# ============================================================
-# EXTRACT TEXT FROM HTML
-# ============================================================
+#EXTRACT TEXT FROM HTML
 
-def extract_text(
-    soup,
-    tag,
-    class_name=None,
-    itemprop=None
-):
+def extract_text( soup, tag, class_name=None,itemprop=None):
     """Extract text from an HTML element."""
 
     if class_name:
 
-        element = soup.find(
-            tag,
-            class_=class_name
-        )
+        element = soup.find(tag, class_=class_name)
 
     elif itemprop:
-
-        element = soup.find(
-            tag,
-            itemprop=itemprop
-        )
+         element = soup.find(tag, itemprop=itemprop)
 
     else:
 
@@ -148,9 +124,7 @@ def extract_text(
     return "Not available"
 
 
-# ============================================================
-# EXTRACT PRODUCT DATA
-# ============================================================
+#EXTRACT PRODUCT DETAILS
 
 def extract_product_data(product_urls):
     """Extract information from individual product pages."""
@@ -159,10 +133,7 @@ def extract_product_data(product_urls):
 
     total_products = len(product_urls)
 
-    for number, product_url in enumerate(
-        product_urls,
-        start=1
-    ):
+    for number, product_url in enumerate(product_urls, start=1):
 
         print(
             f"\nExtracting product "
@@ -184,45 +155,34 @@ def extract_product_data(product_urls):
             )
 
             # Product title
-            title = extract_text(
-                soup,
-                "div",
-                class_name=(
-                    "b-advert-title-inner "
-                    "qa-advert-title "
-                    "b-advert-title-inner--h1"
+            title = extract_text( soup,"div", class_name=( "b-advert-title-inner "
+                                                          "qa-advert-title "
+                                                        "b-advert-title-inner--h1"
                 )
             )
 
             # Product price
-            price = extract_text(
-                soup,
-                "span",
-                class_name="qa-advert-price-view-value"
-            )
+            price = extract_text( soup,
+                                 "span",
+                                    class_name="qa-advert-price-view-value"
+                                )
 
             # Product condition
-            condition = extract_text(
-                soup,
-                "div",
-                itemprop="itemCondition"
+            condition = extract_text( soup,
+                                    "div",
+                                     itemprop="itemCondition"
             )
 
             # Product brand
-            brand = extract_text(
-                soup,
-                "div",
-                itemprop="brand"
+            brand = extract_text(soup,
+                                "div",
+                                itemprop="brand"
             )
 
             # Store address
-            store_address = extract_text(
-                soup,
-                "div",
-                class_name=(
-                    "b-store-details__address "
-                    "h-mb-10"
-                )
+            store_address = extract_text(soup,
+                                        "div",
+                                class_name=( "b-store-details__address ""h-mb-10")
             )
 
             product = {
@@ -255,9 +215,7 @@ def extract_product_data(product_urls):
     return products
 
 
-# ============================================================
-# SAVE DATA
-# ============================================================
+#SAVE THE DATA TO CSV FILE
 
 def save_data(products):
 
@@ -291,9 +249,7 @@ def save_data(products):
         return dataframe
 
 
-# ============================================================
-# MAIN PROGRAM
-# ============================================================
+#MAIN PROGRAM
 
 def main():
     """Run the complete scraping process."""
